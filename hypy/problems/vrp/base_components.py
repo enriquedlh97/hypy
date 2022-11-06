@@ -1,4 +1,16 @@
-"""VRP Base Components Module."""
+"""VRP Base Components Module.
+
+This module allows the suer to make basic operations with the base
+elements form a VRP problem.
+
+Examples:
+    >>> import numpy as np
+    >>> from hypy.problems.vrp.base_components import Location
+    >>> Location(np.array([2, 3, 4])) - Location(np.array([1, 2, 3]))
+    array([1, 1, 1])
+    >>> Location(np.array([5, 23, 7])) - Location(np.array([2, 20, 1]))
+    array([3, 3, 6])
+"""
 
 
 from __future__ import annotations
