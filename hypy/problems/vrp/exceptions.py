@@ -18,11 +18,11 @@ class LocationCoordinatesError(Exception):
         """Class Constructor.
 
         Args:
-            coordinates_type (type | None, optional): _description_.
+            coordinates_type: _description_.
                 Defaults to None.
-            shape (tuple[int] | None, optional): _description_. Defaults
+            shape: _description_. Defaults
                 to None.
-            size (int | None, optional): _description_. Defaults to None.
+            size: _description_. Defaults to None.
         """
         super().__init__(*args)
         self.coordinates_type = coordinates_type
@@ -33,7 +33,7 @@ class LocationCoordinatesError(Exception):
         """String Representation Method.
 
         Returns:
-            str: _description_
+            _description_
         """
         message: str = ""
 

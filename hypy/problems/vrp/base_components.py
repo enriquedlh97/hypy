@@ -17,7 +17,7 @@ class Location:
         """Class Constructor.
 
         Args:
-            coordinates (npt.NDArray[np.float_]): _description_
+            coordinates: _description_
 
         Raises:
             LocationCoordinatesError: _description_
@@ -38,11 +38,18 @@ class Location:
     def __sub__(self, location: Location) -> np.float_ | np.int_:
         """Subtraction Method.
 
+        Examples:
+            >>> import numpy as np
+            >>> Location(np.array([2, 3, 4])) - Location(np.array([1, 2, 3]))
+            array([1, 1, 1])
+            >>> Location(np.array([5, 23, 7])) - Location(np.array([2, 20, 1]))
+            array([3, 3, 6])
+
         Args:
-            location (Location): _description_
+            location: _description_
 
         Returns:
-            np.float_ | np.int_: _description_
+            _description_
         """
         return self.coordinates - location.coordinates  # type: ignore
 
@@ -50,10 +57,10 @@ class Location:
         """Addition Method.
 
         Args:
-            location (Location): _description_
+            location: _description_
 
         Returns:
-            np.float_ | np.int_: _description_
+            _description_
         """
         return self.coordinates + location.coordinates  # type: ignore
 
@@ -65,7 +72,7 @@ class BaseElement:
         """Class Constructor.
 
         Args:
-            location (Location): _description_
+            location: _description_
 
         Raises:
             TypeError: _description_
@@ -81,10 +88,10 @@ class BaseElement:
         """Computes distance between current object an another VRP element.
 
         Args:
-            element (BaseElement): _description_
+            element: _description_
 
         Returns:
-            np.float_: _description_
+            _description_
         """
         # TODO: Check Location types are the same, same dimensions, etc.
         return self.distance_op(element.location)
@@ -93,10 +100,10 @@ class BaseElement:
         """Defines the distance operation. Defaults to euclidean distance.
 
         Args:
-            location (Location): _description_
+            location: _description_
 
         Returns:
-            np.float_: _description_
+            _description_
         """
         return np.linalg.norm(self.location - location, ord=2)
 
@@ -108,8 +115,8 @@ class Customer(BaseElement):
         """Class Constructor.
 
         Args:
-            location (Location): _description_
-            demand (float | int): _description_
+            location: _description_
+            demand: _description_
         """
         super().__init__(location)
         self.demand = demand
@@ -122,8 +129,8 @@ class Vehicle(BaseElement):
         """Class Constructor.
 
         Args:
-            location (Location): _description_
-            capacity (float | int): _description_
+            location: _description_
+            capacity: _description_
         """
         super().__init__(location)
         self.capacity = capacity
@@ -136,7 +143,7 @@ class Depot(BaseElement):
         """Class Constructor.
 
         Args:
-            location (Location): _description_
+            location: _description_
         """
         super().__init__(location)
 
@@ -148,8 +155,8 @@ class Route:
         """Class Constructor.
 
         Args:
-            vehicle (Vehicle): _description_
-            route (list[Customer]): _description_
+            vehicle: _description_
+            route: _description_
         """
         self.vehicle = vehicle
         self.route = route
@@ -158,7 +165,7 @@ class Route:
         """Length ob object method.
 
         Returns:
-            _type_: _description_
+            _description_
         """
         return len(self.route)
 
@@ -170,7 +177,7 @@ class Solution(BaseSolution):
         """Class Constructor.
 
         Args:
-            routes (list[Route]): _description_
+            routes: _description_
         """
         self.routes = routes
 
@@ -187,9 +194,9 @@ class VRPProblem(BaseProblem):
         """Class Constructor.
 
         Args:
-            depot (list[Depot]): _description_
-            customers (list[Customer]): _description_
-            vehicles (list[Vehicle]): _description_
+            depot: _description_
+            customers: _description_
+            vehicles: _description_
         """
         super().__init__()
         self.depot = depot

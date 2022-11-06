@@ -12,3 +12,4 @@ problems by employing and developing  hyper-heuristics.
 - tests
 - remember to run mypy
 - Automatic documentation
+- Test docstrings examples (`poetry run python -m doctest hypy/problems/vrp/base_components.py`)

@@ -21,9 +21,9 @@ class VRPTWProblem(VRPProblem):
         """Class Constructor.
 
         Args:
-            depot (list[Depot]): _description_
-            customers (list[Customer]): _description_
-            vehicles (list[Vehicle]): _description_
+            depot: _description_
+            customers: _description_
+            vehicles: _description_
         """
         super().__init__(depot, customers, vehicles)
 
