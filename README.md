@@ -13,3 +13,6 @@ problems by employing and developing hyper-heuristics.
 - remember to run mypy
 - Automatic documentation
 - Test docstrings examples (`poetry run python -m doctest hypy/problems/vrp/base_components.py`)
+- Building and locally visualizing docs.
+  - `poetry run mkdocs serve` for development.
+  - `mkdocs build`
