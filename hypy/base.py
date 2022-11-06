@@ -2,47 +2,48 @@
 
 
 class BaseProblem:
-    """_summary_."""
+    """Base Problem Class."""
 
     def __init__(self) -> None:
-        """_summary_."""
+        """Class Constructor."""
         pass
 
     def load_problem(self) -> None:
-        """_summary_.
+        """Method to load a problem.
 
-        :raises NotImplementedError: _description_
+        Raises:
+            NotImplementedError: _description_
         """
         raise NotImplementedError
 
 
 class BaseSolution:
-    """_summary_."""
+    """Base Solution Class."""
 
     def __init__(self) -> None:
-        """_summary_."""
+        """Class Constructor."""
         pass
 
 
 class BaseHeuristic:
-    """_summary_."""
+    """Base Heuristic Class."""
 
     def __init__(self) -> None:
-        """_summary_."""
+        """Class Constructor."""
         pass
 
 
 class BaseHyperHeuristic:
-    """_summary_."""
+    """Base Hyper-Heuristic Class."""
 
     def __init__(self) -> None:
-        """_summary_."""
+        """Class Constructor."""
         pass
 
 
 class BaseMetaHeuristic:
-    """_summary_."""
+    """Base Meta-Heuristic Class."""
 
     def __init__(self) -> None:
-        """_summary_."""
+        """Class Constructor."""
         pass

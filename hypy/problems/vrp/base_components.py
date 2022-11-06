@@ -1,4 +1,16 @@
-"""VRP Base Components."""
+"""VRP Base Components Module.
+
+This module allows the suer to make basic operations with the base
+elements form a VRP problem.
+
+Examples:
+    >>> import numpy as np
+    >>> from hypy.problems.vrp.base_components import Location
+    >>> Location(np.array([2, 3, 4])) - Location(np.array([1, 2, 3]))
+    array([1, 1, 1])
+    >>> Location(np.array([5, 23, 7])) - Location(np.array([2, 20, 1]))
+    array([3, 3, 6])
+"""
 
 
 from __future__ import annotations
@@ -11,16 +23,18 @@ from hypy.problems.vrp.exceptions import LocationCoordinatesError
 
 
 class Location:
-    """_summary_."""
+    """VRP Element Location Class."""
 
     def __init__(self, coordinates: npt.NDArray[np.float_]) -> None:
-        """_summary_.
+        """Class Constructor.
 
-        :param coordinates: _description_
-        :type coordinates: npt.NDArray[np.float_]
-        :raises LocationCoordinatesError: _description_
-        :raises LocationCoordinatesError: _description_
-        :raises LocationCoordinatesError: _description_
+        Args:
+            coordinates: _description_
+
+        Raises:
+            LocationCoordinatesError: _description_
+            LocationCoordinatesError: _description_
+            LocationCoordinatesError: _description_
         """
         if not isinstance(coordinates, np.ndarray):
             raise LocationCoordinatesError(coordinates_type=type(coordinates))
@@ -34,35 +48,46 @@ class Location:
         self.coordinates = coordinates
 
     def __sub__(self, location: Location) -> np.float_ | np.int_:
-        """_summary_.
+        """Subtraction Method.
 
-        :param location: _description_
-        :type location: Location
-        :return: _description_
-        :rtype: np.float_ | np.int_
+        Examples:
+            >>> import numpy as np
+            >>> Location(np.array([2, 3, 4])) - Location(np.array([1, 2, 3]))
+            array([1, 1, 1])
+            >>> Location(np.array([5, 23, 7])) - Location(np.array([2, 20, 1]))
+            array([3, 3, 6])
+
+        Args:
+            location: _description_
+
+        Returns:
+            _description_
         """
         return self.coordinates - location.coordinates  # type: ignore
 
     def __add__(self, location: Location) -> np.float_ | np.int_:
-        """_summary_.
+        """Addition Method.
 
-        :param location: _description_
-        :type location: Location
-        :return: _description_
-        :rtype: np.float_ | np.int_
+        Args:
+            location: _description_
+
+        Returns:
+            _description_
         """
         return self.coordinates + location.coordinates  # type: ignore
 
 
 class BaseElement:
-    """_summary_."""
+    """VRP Base Element Class."""
 
     def __init__(self, location: Location) -> None:
-        """_summary_.
+        """Class Constructor.
 
-        :param location: _description_
-        :type location: Location
-        :raises TypeError: _description_
+        Args:
+            location: _description_
+
+        Raises:
+            TypeError: _description_
         """
         if isinstance(location, Location):
             self.location = location
@@ -72,126 +97,105 @@ class BaseElement:
             )
 
     def compute_distance(self, element: BaseElement) -> np.float_:
-        """_summary_.
+        """Computes distance between current object an another VRP element.
 
-        :param element: _description_
-        :type element: BaseElement
-        :return: _description_
-        :rtype: np.float_
+        Args:
+            element: _description_
+
+        Returns:
+            _description_
         """
         # TODO: Check Location types are the same, same dimensions, etc.
         return self.distance_op(element.location)
 
     def distance_op(self, location: Location) -> np.float_:
-        """_summary_.
+        """Defines the distance operation. Defaults to euclidean distance.
 
-        :param location: _description_
-        :type location: Location
-        :return: _description_
-        :rtype: np.float_
+        Args:
+            location: _description_
+
+        Returns:
+            _description_
         """
         return np.linalg.norm(self.location - location, ord=2)
 
 
 class Customer(BaseElement):
-    """_summary_.
-
-    :param BaseElement: _description_
-    :type BaseElement: _type_
-    """
+    """VRP Customer Class."""
 
     def __init__(self, location: Location, demand: float | int) -> None:
-        """_summary_.
+        """Class Constructor.
 
-        :param location: _description_
-        :type location: Location
-        :param demand: _description_
-        :type demand: float | int
+        Args:
+            location: _description_
+            demand: _description_
         """
         super().__init__(location)
         self.demand = demand
 
 
 class Vehicle(BaseElement):
-    """_summary_.
-
-    :param BaseElement: _description_
-    :type BaseElement: _type_
-    """
+    """VRP Vehicle Class."""
 
     def __init__(self, location: Location, capacity: float | int) -> None:
-        """_summary_.
+        """Class Constructor.
 
-        :param location: _description_
-        :type location: Location
-        :param capacity: _description_
-        :type capacity: float | int
+        Args:
+            location: _description_
+            capacity: _description_
         """
         super().__init__(location)
         self.capacity = capacity
 
 
 class Depot(BaseElement):
-    """_summary_.
-
-    :param BaseElement: _description_
-    :type BaseElement: _type_
-    """
+    """VRP Depot Class."""
 
     def __init__(self, location: Location) -> None:
-        """_summary_.
+        """Class Constructor.
 
-        :param location: _description_
-        :type location: Location
+        Args:
+            location: _description_
         """
         super().__init__(location)
 
 
 class Route:
-    """_summary_."""
+    """VRP Route Class."""
 
     def __init__(self, vehicle: Vehicle, route: list[Customer]) -> None:
-        """_summary_.
+        """Class Constructor.
 
-        :param vehicle: _description_
-        :type vehicle: Vehicle
-        :param route: _description_
-        :type route: list[Customer]
+        Args:
+            vehicle: _description_
+            route: _description_
         """
         self.vehicle = vehicle
         self.route = route
 
     def __len__(self):
-        """_summary_.
+        """Length ob object method.
 
-        :return: _description_
-        :rtype: _type_
+        Returns:
+            _description_
         """
         return len(self.route)
 
 
 class Solution(BaseSolution):
-    """_summary_.
-
-    :param BaseSolution: _description_
-    :type BaseSolution: _type_
-    """
+    """VRP Solution Class."""
 
     def __init__(self, routes: list[Route]) -> None:
-        """_summary_.
+        """Class Constructor.
 
-        :param routes: _description_
-        :type routes: list[Route]
+        Args:
+            routes: _description_
         """
         self.routes = routes
 
 
 class VRPProblem(BaseProblem):
-    """_summary_.
-
-    :param BaseProblem: _description_
-    :type BaseProblem: _type_
-    """
+    """VRP Problem Class."""
 
     def __init__(
         self,
@@ -199,12 +203,12 @@ class VRPProblem(BaseProblem):
         customers: list[Customer],
         vehicles: list[Vehicle],
     ) -> None:
-        """_summary_.
+        """Class Constructor.
 
-        :param customers: _description_
-        :type customers: list[Customer]
-        :param vehicles: _description_
-        :type vehicles: list[Vehicle]
+        Args:
+            depot: _description_
+            customers: _description_
+            vehicles: _description_
         """
         super().__init__()
         self.depot = depot
@@ -213,12 +217,8 @@ class VRPProblem(BaseProblem):
 
 
 class VRPHeuristic(BaseHeuristic):
-    """_summary_.
-
-    :param BaseHeuristic: _description_
-    :type BaseHeuristic: _type_
-    """
+    """VRP Heuristic Class."""
 
     def __init__(self) -> None:
-        """_summary_."""
+        """Class Constructor."""
         super().__init__()

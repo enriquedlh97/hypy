@@ -1,4 +1,4 @@
-"""Exceptions."""
+"""VRP Exceptions Module."""
 
 
 class LocationCoordinatesError(Exception):
@@ -15,14 +15,14 @@ class LocationCoordinatesError(Exception):
         size: int | None = None,
         *args: object,
     ) -> None:
-        """_summary_.
+        """Class Constructor.
 
-        :param coordinates_type: _description_, defaults to None
-        :type coordinates_type: type | None, optional
-        :param shape: _description_, defaults to None
-        :type shape: tuple[int] | None, optional
-        :param size: _description_, defaults to None
-        :type size: int | None, optional
+        Args:
+            coordinates_type: _description_.
+                Defaults to None.
+            shape: _description_. Defaults
+                to None.
+            size: _description_. Defaults to None.
         """
         super().__init__(*args)
         self.coordinates_type = coordinates_type
@@ -30,10 +30,10 @@ class LocationCoordinatesError(Exception):
         self.size = size
 
     def __str__(self) -> str:
-        """_summary_.
+        """String Representation Method.
 
-        :return: _description_
-        :rtype: str
+        Returns:
+            _description_
         """
         message: str = ""
 

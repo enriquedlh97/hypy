@@ -1,3 +1,4 @@
+exclude: ^site/]
 repos:
 -   repo: https://github.com/psf/black
     rev: 22.6.0
@@ -20,6 +21,7 @@ repos:
     hooks:
     -   id: pydocstyle
         args: [--config=pyproject.toml]
+        additional_dependencies: ["toml"]
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.3.0
     hooks:

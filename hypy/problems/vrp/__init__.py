@@ -1,1 +1,1 @@
-"""VRPs package."""
+"""Vehicle Routing Problems (VRP) Package."""
