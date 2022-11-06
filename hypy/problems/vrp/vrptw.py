@@ -14,11 +14,7 @@ from hypy.problems.vrp.base_components import (
 
 
 class VRPTWProblem(VRPProblem):
-    """_summary_.
-
-    Args:
-        VRPProblem (_type_): _description_
-    """
+    """_summary_."""
 
     def __init__(
         self,
@@ -38,6 +34,7 @@ class VRPTWProblem(VRPProblem):
     def load_problem(self) -> None:
         """_summary_.
 
-        :raises NotImplementedError: _description_
+        Raises:
+            NotImplementedError: _description_
         """
         raise NotImplementedError

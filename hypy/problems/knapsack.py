@@ -7,8 +7,8 @@ from hypy.base import BaseProblem
 class KnapsackProblem(BaseProblem):
     """_summary_.
 
-    :param BaseProblem: _description_
-    :type BaseProblem: _type_
+    Args:
+        BaseProblem (_type_): _description_
     """
 
     def __init__(self) -> None:

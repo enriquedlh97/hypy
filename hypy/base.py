@@ -11,7 +11,8 @@ class BaseProblem:
     def load_problem(self) -> None:
         """_summary_.
 
-        :raises NotImplementedError: _description_
+        Raises:
+            NotImplementedError: _description_
         """
         raise NotImplementedError
 

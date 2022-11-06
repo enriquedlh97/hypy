@@ -16,11 +16,13 @@ class Location:
     def __init__(self, coordinates: npt.NDArray[np.float_]) -> None:
         """_summary_.
 
-        :param coordinates: _description_
-        :type coordinates: npt.NDArray[np.float_]
-        :raises LocationCoordinatesError: _description_
-        :raises LocationCoordinatesError: _description_
-        :raises LocationCoordinatesError: _description_
+        Args:
+            coordinates (npt.NDArray[np.float_]): _description_
+
+        Raises:
+            LocationCoordinatesError: _description_
+            LocationCoordinatesError: _description_
+            LocationCoordinatesError: _description_
         """
         if not isinstance(coordinates, np.ndarray):
             raise LocationCoordinatesError(coordinates_type=type(coordinates))
@@ -36,20 +38,22 @@ class Location:
     def __sub__(self, location: Location) -> np.float_ | np.int_:
         """_summary_.
 
-        :param location: _description_
-        :type location: Location
-        :return: _description_
-        :rtype: np.float_ | np.int_
+        Args:
+            location (Location): _description_
+
+        Returns:
+            np.float_ | np.int_: _description_
         """
         return self.coordinates - location.coordinates  # type: ignore
 
     def __add__(self, location: Location) -> np.float_ | np.int_:
         """_summary_.
 
-        :param location: _description_
-        :type location: Location
-        :return: _description_
-        :rtype: np.float_ | np.int_
+        Args:
+            location (Location): _description_
+
+        Returns:
+            np.float_ | np.int_: _description_
         """
         return self.coordinates + location.coordinates  # type: ignore
 
@@ -60,9 +64,11 @@ class BaseElement:
     def __init__(self, location: Location) -> None:
         """_summary_.
 
-        :param location: _description_
-        :type location: Location
-        :raises TypeError: _description_
+        Args:
+            location (Location): _description_
+
+        Raises:
+            TypeError: _description_
         """
         if isinstance(location, Location):
             self.location = location
@@ -74,10 +80,11 @@ class BaseElement:
     def compute_distance(self, element: BaseElement) -> np.float_:
         """_summary_.
 
-        :param element: _description_
-        :type element: BaseElement
-        :return: _description_
-        :rtype: np.float_
+        Args:
+            element (BaseElement): _description_
+
+        Returns:
+            np.float_: _description_
         """
         # TODO: Check Location types are the same, same dimensions, etc.
         return self.distance_op(element.location)
@@ -85,47 +92,38 @@ class BaseElement:
     def distance_op(self, location: Location) -> np.float_:
         """_summary_.
 
-        :param location: _description_
-        :type location: Location
-        :return: _description_
-        :rtype: np.float_
+        Args:
+            location (Location): _description_
+
+        Returns:
+            np.float_: _description_
         """
         return np.linalg.norm(self.location - location, ord=2)
 
 
 class Customer(BaseElement):
-    """_summary_.
-
-    :param BaseElement: _description_
-    :type BaseElement: _type_
-    """
+    """_summary_."""
 
     def __init__(self, location: Location, demand: float | int) -> None:
         """_summary_.
 
-        :param location: _description_
-        :type location: Location
-        :param demand: _description_
-        :type demand: float | int
+        Args:
+            location (Location): _description_
+            demand (float | int): _description_
         """
         super().__init__(location)
         self.demand = demand
 
 
 class Vehicle(BaseElement):
-    """_summary_.
-
-    :param BaseElement: _description_
-    :type BaseElement: _type_
-    """
+    """_summary_."""
 
     def __init__(self, location: Location, capacity: float | int) -> None:
         """_summary_.
 
-        :param location: _description_
-        :type location: Location
-        :param capacity: _description_
-        :type capacity: float | int
+        Args:
+            location (Location): _description_
+            capacity (float | int): _description_
         """
         super().__init__(location)
         self.capacity = capacity
@@ -134,8 +132,8 @@ class Vehicle(BaseElement):
 class Depot(BaseElement):
     """_summary_.
 
-    :param BaseElement: _description_
-    :type BaseElement: _type_
+    Args:
+        BaseElement (_type_): _description_
     """
 
     def __init__(self, location: Location) -> None:
@@ -153,10 +151,9 @@ class Route:
     def __init__(self, vehicle: Vehicle, route: list[Customer]) -> None:
         """_summary_.
 
-        :param vehicle: _description_
-        :type vehicle: Vehicle
-        :param route: _description_
-        :type route: list[Customer]
+        Args:
+            vehicle (Vehicle): _description_
+            route (list[Customer]): _description_
         """
         self.vehicle = vehicle
         self.route = route
@@ -164,34 +161,26 @@ class Route:
     def __len__(self):
         """_summary_.
 
-        :return: _description_
-        :rtype: _type_
+        Returns:
+            _type_: _description_
         """
         return len(self.route)
 
 
 class Solution(BaseSolution):
-    """_summary_.
-
-    :param BaseSolution: _description_
-    :type BaseSolution: _type_
-    """
+    """_summary_."""
 
     def __init__(self, routes: list[Route]) -> None:
         """_summary_.
 
-        :param routes: _description_
-        :type routes: list[Route]
+        Args:
+            routes (list[Route]): _description_
         """
         self.routes = routes
 
 
 class VRPProblem(BaseProblem):
-    """_summary_.
-
-    :param BaseProblem: _description_
-    :type BaseProblem: _type_
-    """
+    """_summary_."""
 
     def __init__(
         self,
@@ -201,10 +190,10 @@ class VRPProblem(BaseProblem):
     ) -> None:
         """_summary_.
 
-        :param customers: _description_
-        :type customers: list[Customer]
-        :param vehicles: _description_
-        :type vehicles: list[Vehicle]
+        Args:
+            depot (list[Depot]): _description_
+            customers (list[Customer]): _description_
+            vehicles (list[Vehicle]): _description_
         """
         super().__init__()
         self.depot = depot
@@ -215,8 +204,8 @@ class VRPProblem(BaseProblem):
 class VRPHeuristic(BaseHeuristic):
     """_summary_.
 
-    :param BaseHeuristic: _description_
-    :type BaseHeuristic: _type_
+    Args:
+        BaseHeuristic (_type_): _description_
     """
 
     def __init__(self) -> None:
