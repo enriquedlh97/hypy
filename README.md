@@ -16,3 +16,4 @@ problems by employing and developing hyper-heuristics.
 - Building and locally visualizing docs.
   - `poetry run mkdocs serve` for development.
   - `mkdocs build`
+  - `mkdocs gh-deploy` for publishing documentation found [here](https://enriquedlh97.github.io/hypy/).
