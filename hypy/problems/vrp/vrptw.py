@@ -1,38 +1,39 @@
-"""VRPTW Components."""
+"""_summary_.
+
+Raises:
+    NotImplementedError: _description_
+"""
 
 
-from typing import Optional
+from hypy.problems.vrp.base_components import (
+    Customer,
+    Depot,
+    Vehicle,
+    VRPProblem,
+)
 
-from hypy.base import BaseProblem
-from hypy.problems.vrp.base_components import Customer, Depot, Vehicle
 
-
-class VRPTWProblem(BaseProblem):
+class VRPTWProblem(VRPProblem):
     """_summary_.
 
-    :param BaseProblem: _description_
-    :type BaseProblem: _type_
+    Args:
+        VRPProblem (_type_): _description_
     """
 
     def __init__(
         self,
-        depot: Optional[Depot] = None,
-        vehicles: Optional[list[Vehicle]] = None,
-        customers: Optional[list[Customer]] = None,
+        depot: list[Depot],
+        customers: list[Customer],
+        vehicles: list[Vehicle],
     ) -> None:
         """_summary_.
 
-        :param depot: _description_, defaults to None
-        :type depot: Optional[Depot], optional
-        :param vehicles: _description_, defaults to None
-        :type vehicles: Optional[list[Vehicle]], optional
-        :param customers: _description_, defaults to None
-        :type customers: Optional[list[Customer]], optional
+        Args:
+            depot (list[Depot]): _description_
+            customers (list[Customer]): _description_
+            vehicles (list[Vehicle]): _description_
         """
-        super().__init__()
-        self.depot = depot
-        self.vehicles = vehicles
-        self.customers = customers
+        super().__init__(depot, customers, vehicles)
 
     def load_problem(self) -> None:
         """_summary_.

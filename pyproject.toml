@@ -29,7 +29,7 @@ profile = "black"
 line_length = 79
 
 [tool.pydocstyle]
-convention = "numpy"
+convention = "google"
 
 [build-system]
 requires = ["poetry-core"]
