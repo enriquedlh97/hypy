@@ -29,12 +29,12 @@ mkdocs-material = "^8.5.8"
 
 [tool.black]
 line-length = 79
-exclude = site/
+exclude = "site/"
 
 [tool.isort]
 profile = "black"
 line_length = 79
-exclude = site/
+exclude = "site/"
 
 [tool.pydocstyle]
 convention = "google"
