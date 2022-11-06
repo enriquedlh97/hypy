@@ -11,3 +11,4 @@ problems by employing and developing  hyper-heuristics.
 - pre-commit
 - tests
 - remember to run mypy
+- Automatic documentation
