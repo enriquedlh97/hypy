@@ -1,4 +1,4 @@
-"""VRP Base Components."""
+"""VRP Base Components Module."""
 
 
 from __future__ import annotations
@@ -11,10 +11,10 @@ from hypy.problems.vrp.exceptions import LocationCoordinatesError
 
 
 class Location:
-    """_summary_."""
+    """VRP Element Location Class."""
 
     def __init__(self, coordinates: npt.NDArray[np.float_]) -> None:
-        """_summary_.
+        """Class Constructor.
 
         Args:
             coordinates (npt.NDArray[np.float_]): _description_
@@ -36,7 +36,7 @@ class Location:
         self.coordinates = coordinates
 
     def __sub__(self, location: Location) -> np.float_ | np.int_:
-        """_summary_.
+        """Subtraction Method.
 
         Args:
             location (Location): _description_
@@ -47,7 +47,7 @@ class Location:
         return self.coordinates - location.coordinates  # type: ignore
 
     def __add__(self, location: Location) -> np.float_ | np.int_:
-        """_summary_.
+        """Addition Method.
 
         Args:
             location (Location): _description_
@@ -59,10 +59,10 @@ class Location:
 
 
 class BaseElement:
-    """_summary_."""
+    """VRP Base Element Class."""
 
     def __init__(self, location: Location) -> None:
-        """_summary_.
+        """Class Constructor.
 
         Args:
             location (Location): _description_
@@ -78,7 +78,7 @@ class BaseElement:
             )
 
     def compute_distance(self, element: BaseElement) -> np.float_:
-        """_summary_.
+        """Computes distance between current object an another VRP element.
 
         Args:
             element (BaseElement): _description_
@@ -90,7 +90,7 @@ class BaseElement:
         return self.distance_op(element.location)
 
     def distance_op(self, location: Location) -> np.float_:
-        """_summary_.
+        """Defines the distance operation. Defaults to euclidean distance.
 
         Args:
             location (Location): _description_
@@ -102,10 +102,10 @@ class BaseElement:
 
 
 class Customer(BaseElement):
-    """_summary_."""
+    """VRP Customer Class."""
 
     def __init__(self, location: Location, demand: float | int) -> None:
-        """_summary_.
+        """Class Constructor.
 
         Args:
             location (Location): _description_
@@ -116,10 +116,10 @@ class Customer(BaseElement):
 
 
 class Vehicle(BaseElement):
-    """_summary_."""
+    """VRP Vehicle Class."""
 
     def __init__(self, location: Location, capacity: float | int) -> None:
-        """_summary_.
+        """Class Constructor.
 
         Args:
             location (Location): _description_
@@ -130,26 +130,22 @@ class Vehicle(BaseElement):
 
 
 class Depot(BaseElement):
-    """_summary_.
-
-    Args:
-        BaseElement (_type_): _description_
-    """
+    """VRP Depot Class."""
 
     def __init__(self, location: Location) -> None:
-        """_summary_.
+        """Class Constructor.
 
-        :param location: _description_
-        :type location: Location
+        Args:
+            location (Location): _description_
         """
         super().__init__(location)
 
 
 class Route:
-    """_summary_."""
+    """VRP Route Class."""
 
     def __init__(self, vehicle: Vehicle, route: list[Customer]) -> None:
-        """_summary_.
+        """Class Constructor.
 
         Args:
             vehicle (Vehicle): _description_
@@ -159,7 +155,7 @@ class Route:
         self.route = route
 
     def __len__(self):
-        """_summary_.
+        """Length ob object method.
 
         Returns:
             _type_: _description_
@@ -168,10 +164,10 @@ class Route:
 
 
 class Solution(BaseSolution):
-    """_summary_."""
+    """VRP Solution Class."""
 
     def __init__(self, routes: list[Route]) -> None:
-        """_summary_.
+        """Class Constructor.
 
         Args:
             routes (list[Route]): _description_
@@ -180,7 +176,7 @@ class Solution(BaseSolution):
 
 
 class VRPProblem(BaseProblem):
-    """_summary_."""
+    """VRP Problem Class."""
 
     def __init__(
         self,
@@ -188,7 +184,7 @@ class VRPProblem(BaseProblem):
         customers: list[Customer],
         vehicles: list[Vehicle],
     ) -> None:
-        """_summary_.
+        """Class Constructor.
 
         Args:
             depot (list[Depot]): _description_
@@ -202,12 +198,8 @@ class VRPProblem(BaseProblem):
 
 
 class VRPHeuristic(BaseHeuristic):
-    """_summary_.
-
-    Args:
-        BaseHeuristic (_type_): _description_
-    """
+    """VRP Heuristic Class."""
 
     def __init__(self) -> None:
-        """_summary_."""
+        """Class Constructor."""
         super().__init__()

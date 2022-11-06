@@ -1,16 +1,12 @@
-"""_summary_."""
+"""Knapsack Problem Module."""
 
 
 from hypy.base import BaseProblem
 
 
 class KnapsackProblem(BaseProblem):
-    """_summary_.
-
-    Args:
-        BaseProblem (_type_): _description_
-    """
+    """Knapsack Problem Class."""
 
     def __init__(self) -> None:
-        """_summary_."""
+        """Class Constructor."""
         super().__init__()

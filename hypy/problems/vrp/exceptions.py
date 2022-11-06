@@ -1,4 +1,4 @@
-"""Exceptions."""
+"""VRP Exceptions Module."""
 
 
 class LocationCoordinatesError(Exception):
@@ -15,7 +15,7 @@ class LocationCoordinatesError(Exception):
         size: int | None = None,
         *args: object,
     ) -> None:
-        """_summary_.
+        """Class Constructor.
 
         Args:
             coordinates_type (type | None, optional): _description_.
@@ -30,7 +30,7 @@ class LocationCoordinatesError(Exception):
         self.size = size
 
     def __str__(self) -> str:
-        """_summary_.
+        """String Representation Method.
 
         Returns:
             str: _description_

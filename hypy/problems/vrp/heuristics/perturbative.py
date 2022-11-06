@@ -4,12 +4,12 @@ from hypy.problems.vrp.base_components import VRPHeuristic
 
 
 class IntrarouteRelocate(VRPHeuristic):
-    """_summary_.
+    """VRP Intraroute Relocate Class.
 
-    :param VRPHeuristic: _description_
-    :type VRPHeuristic: _type_
+    Args:
+        VRPHeuristic (_type_): _description_
     """
 
     def __init__(self) -> None:
-        """_summary_."""
+        """Constructor Method."""
         super().__init__()
