@@ -194,7 +194,10 @@ class VRPProblem(BaseProblem):
     """
 
     def __init__(
-        self, customers: list[Customer], vehicles: list[Vehicle]
+        self,
+        depot: list[Depot],
+        customers: list[Customer],
+        vehicles: list[Vehicle],
     ) -> None:
         """_summary_.
 
@@ -204,6 +207,7 @@ class VRPProblem(BaseProblem):
         :type vehicles: list[Vehicle]
         """
         super().__init__()
+        self.depot = depot
         self.customers = customers
         self.vehicles = vehicles
 
