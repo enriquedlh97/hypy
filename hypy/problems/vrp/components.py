@@ -80,7 +80,7 @@ class Location:
 class BaseElement:
     """VRP Base Element Class."""
 
-    def __init__(self, location: Location) -> None:
+    def __init__(self, location: Location | None = None) -> None:
         """Class Constructor.
 
         Args:
@@ -89,14 +89,16 @@ class BaseElement:
         Raises:
             TypeError: _description_
         """
-        if isinstance(location, Location):
-            self.location = location
-        else:
-            raise TypeError(
-                f"Location must be of type {Location}, not {type(location)}"
-            )
+        if location is not None:
+            if isinstance(location, Location):
+                self.location = location
+            else:
+                raise TypeError(
+                    f"Location must be of type {Location}, "
+                    + f"not {type(location)}"
+                )
 
-    def compute_distance(self, element: BaseElement) -> np.float_:
+    def compute_distance(self, element: BaseElement) -> np.float_ | None:
         """Computes distance between current object an another VRP element.
 
         Args:
@@ -106,7 +108,10 @@ class BaseElement:
             _description_
         """
         # TODO: Check Location types are the same, same dimensions, etc.
-        return self.distance_op(element.location)
+        if self.location is not None:
+            return self.distance_op(element.location)
+        else:
+            return None
 
     def distance_op(self, location: Location) -> np.float_:
         """Defines the distance operation. Defaults to euclidean distance.
@@ -123,7 +128,9 @@ class BaseElement:
 class Customer(BaseElement):
     """VRP Customer Class."""
 
-    def __init__(self, location: Location, demand: float | int) -> None:
+    def __init__(
+        self, demand: float | int, location: Location | None = None
+    ) -> None:
         """Class Constructor.
 
         Args:
@@ -137,7 +144,9 @@ class Customer(BaseElement):
 class Vehicle(BaseElement):
     """VRP Vehicle Class."""
 
-    def __init__(self, location: Location, capacity: float | int) -> None:
+    def __init__(
+        self, capacity: float | int, location: Location | None = None
+    ) -> None:
         """Class Constructor.
 
         Args:
@@ -151,7 +160,7 @@ class Vehicle(BaseElement):
 class Depot(BaseElement):
     """VRP Depot Class."""
 
-    def __init__(self, location: Location) -> None:
+    def __init__(self, location: Location | None = None) -> None:
         """Class Constructor.
 
         Args:
@@ -194,14 +203,14 @@ class Solution(BaseSolution):
         self.routes = routes
 
 
-class VRPProblem(BaseProblem):
+class VRP(BaseProblem):
     """VRP Problem Class."""
 
     def __init__(
         self,
-        depot: list[Depot],
-        customers: list[Customer],
-        vehicles: list[Vehicle],
+        depot: list[Depot] | None = None,
+        customers: list[Customer] | None = None,
+        vehicles: list[Vehicle] | None = None,
     ) -> None:
         """Class Constructor.
 

@@ -35,7 +35,6 @@ exclude = "site/"
 [tool.isort]
 profile = "black"
 line_length = 79
-exclude = "site/"
 
 [tool.pydocstyle]
 convention = "google"

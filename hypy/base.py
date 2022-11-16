@@ -8,7 +8,7 @@ class BaseProblem:
         """Class Constructor."""
         pass
 
-    def load_problem(self) -> None:
+    def load_problem(self, file_name: str) -> None:
         """Method to load a problem.
 
         Raises:
