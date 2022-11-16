@@ -1,6 +1,6 @@
 """Perturbative VRP Heuristics."""
 
-from hypy.problems.vrp.base_components import VRPHeuristic
+from hypy.problems.vrp.components import VRPHeuristic
 
 
 class IntrarouteRelocate(VRPHeuristic):

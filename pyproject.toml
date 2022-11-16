@@ -20,6 +20,7 @@ flake8 = "^5.0.4"
 mypy = "^0.982"
 pytest = "^7.2.0"
 toml = "^0.10.2"
+ipykernel = "^6.17.0"
 
 
 [tool.poetry.group.docs.dependencies]
@@ -34,7 +35,6 @@ exclude = "site/"
 [tool.isort]
 profile = "black"
 line_length = 79
-exclude = "site/"
 
 [tool.pydocstyle]
 convention = "google"
