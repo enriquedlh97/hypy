@@ -76,6 +76,14 @@ class Location:
         """
         return self.coordinates + location.coordinates  # type: ignore
 
+    def __repr__(self) -> str:
+        """_summary_.
+
+        Returns:
+            str: _description_
+        """
+        return f"{self.__class__.__name__}( coordinates={self.coordinates} )"
+
 
 class BaseElement:
     """VRP Base Element Class."""
@@ -97,6 +105,14 @@ class BaseElement:
                     f"Location must be of type {Location}, "
                     + f"not {type(location)}"
                 )
+
+    def __repr__(self) -> str:
+        """_summary_.
+
+        Returns:
+            str: _description_
+        """
+        return f"{self.__class__.__name__}( location={self.location} )"
 
     def compute_distance(self, element: BaseElement) -> np.float_ | None:
         """Computes distance between current object an another VRP element.
@@ -140,6 +156,17 @@ class Customer(BaseElement):
         super().__init__(location)
         self.demand = demand
 
+    def __repr__(self) -> str:
+        """_summary_.
+
+        Returns:
+            str: _description_
+        """
+        return (
+            f"{self.__class__.__name__}( location={self.location}, "
+            + f"demand={self.demand} )"
+        )
+
 
 class Vehicle(BaseElement):
     """VRP Vehicle Class."""
@@ -155,6 +182,17 @@ class Vehicle(BaseElement):
         """
         super().__init__(location)
         self.capacity = capacity
+
+    def __repr__(self) -> str:
+        """_summary_.
+
+        Returns:
+            str: _description_
+        """
+        return (
+            f"{self.__class__.__name__}( location={self.location}, "
+            + f"capacity={self.capacity} )"
+        )
 
 
 class Depot(BaseElement):
@@ -190,6 +228,17 @@ class Route:
         """
         return len(self.route)
 
+    def __repr__(self) -> str:
+        """_summary_.
+
+        Returns:
+            str: _description_
+        """
+        return (
+            f"{self.__class__.__name__}( vehicle={self.vehicle}, "
+            + f"route=[{len(self.route)} Customers] )"
+        )
+
 
 class Solution(BaseSolution):
     """VRP Solution Class."""
@@ -202,15 +251,26 @@ class Solution(BaseSolution):
         """
         self.routes = routes
 
+    def __repr__(self) -> str:
+        """_summary_.
+
+        Returns:
+            str: _description_
+        """
+        return (
+            f"{self.__class__.__name__}( routes=[{len(self.routes)} "
+            + "Routes] )"
+        )
+
 
 class VRP(BaseProblem):
     """VRP Problem Class."""
 
     def __init__(
         self,
-        depot: list[Depot] | None = None,
-        customers: list[Customer] | None = None,
-        vehicles: list[Vehicle] | None = None,
+        depot: list[Depot] = [],
+        customers: list[Customer] = [],
+        vehicles: list[Vehicle] = [],
     ) -> None:
         """Class Constructor.
 
@@ -223,6 +283,19 @@ class VRP(BaseProblem):
         self.depot = depot
         self.customers = customers
         self.vehicles = vehicles
+
+    def __repr__(self) -> str:
+        """_summary_.
+
+        Returns:
+            str: _description_
+        """
+        return (
+            f"{self.__class__.__name__}( depot=[{len(self.depot)} Depot], "
+            + f"customers=[{len(self.customers)} "
+            + "Customers], "
+            + f"vehicles=[{len(self.vehicles)} Vehicles]"
+        )
 
 
 class VRPHeuristic(BaseHeuristic):
