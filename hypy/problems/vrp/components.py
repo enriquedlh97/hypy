@@ -236,7 +236,7 @@ class Route:
         """
         return (
             f"{self.__class__.__name__}( vehicle={self.vehicle}, "
-            + f"route=[{len(self.route)} Customers] )"
+            + f"route=[{len(self.route)} Customer(s)] )"
         )
 
 
@@ -259,7 +259,7 @@ class Solution(BaseSolution):
         """
         return (
             f"{self.__class__.__name__}( routes=[{len(self.routes)} "
-            + "Routes] )"
+            + "Route(s)] )"
         )
 
 
@@ -291,10 +291,9 @@ class VRP(BaseProblem):
             str: _description_
         """
         return (
-            f"{self.__class__.__name__}( depot=[{len(self.depot)} Depot], "
-            + f"customers=[{len(self.customers)} "
-            + "Customers], "
-            + f"vehicles=[{len(self.vehicles)} Vehicles]"
+            f"{self.__class__.__name__}( depot=[{len(self.depot)} Depot(s)], "
+            + f"customers=[{len(self.customers)} Customer(s)], "
+            + f"vehicles=[{len(self.vehicles)} Vehicle(s)]"
         )
 
 
