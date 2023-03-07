@@ -10,8 +10,11 @@ from hypy.problems.vrp.components import (
     Customer,
     Depot,
     Location,
+    Route,
+    Solution,
     Vehicle,
 )
+from hypy.problems.vrp.exceptions import NotEnoughCustomersError
 
 
 class TimeWindow:
@@ -118,6 +121,78 @@ class VRPTWDepot(Depot):
             + f"id={self.id_number}, location={self.location}, "
             + f"time_window={self.time_window} )"
         )
+
+
+class VRPTWRoute(Route):
+    """_summary_.
+
+    Args:
+        Route (_type_): _description_
+    """
+
+    def __init__(self, vehicle: Vehicle, route: list[VRPTWCustomer]) -> None:
+        """_summary_.
+
+        Args:
+            vehicle (Vehicle): _description_
+            route (list[VRPTWCustomer]): _description_
+        """
+        super().__init__(vehicle)
+        self.route = route
+
+    def remove(
+        self, position: int, number_of_customers_to_delete: int
+    ) -> VRPTWRoute:
+        if position < 0 or position >= super().__len__():
+            raise NameError("Wrong remove position in the route.")
+        if position + number_of_customers_to_delete > super().__len__():
+            raise NotEnoughCustomersError(
+                self, min_required=position + number_of_customers_to_delete
+            )
+        del self.route[position + 1 : position + number_of_customers_to_delete]
+
+        return self
+
+    def insert(
+        self, position: int, sequence: list[VRPTWCustomer]
+    ) -> VRPTWRoute:
+        if position < 0 or position > super().__len__():
+            raise NameError("Wrong insert position in the route.")
+
+        self.route = (
+            self.route[: position + 1] + sequence + self.route[position + 1 :]
+        )
+
+        return self
+
+    def violate_windows(self):
+        pass
+
+    def exceeds_capacity(self):
+        pass
+
+    @staticmethod
+    def validate_route_insertion(
+        customer: VRPTWCustomer, position: int, route: VRPTWRoute
+    ) -> bool:
+        route.insert(position, [customer])
+        return not (route.violate_windows() or route.exceeds_capacity())
+
+
+class VRPTWSolution(Solution):
+    """_summary_.
+
+    Args:
+        Solution (_type_): _description_
+    """
+
+    def __init__(self, routes: list[VRPTWRoute]) -> None:
+        """_summary_.
+
+        Args:
+            routes (list[VRPTWRoute]): _description_
+        """
+        self.routes = routes
 
 
 class VRPTW(VRP):

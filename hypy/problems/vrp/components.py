@@ -210,12 +210,12 @@ class Depot(BaseElement):
 class Route:
     """VRP Route Class."""
 
-    def __init__(self, vehicle: Vehicle, route: list[Customer]) -> None:
+    def __init__(self, vehicle: Vehicle, route: list[Customer] = []) -> None:
         """Class Constructor.
 
         Args:
             vehicle: _description_
-            route: _description_
+            route: _description_. Defaults to [].
         """
         self.vehicle = vehicle
         self.route = route
@@ -243,7 +243,7 @@ class Route:
 class Solution(BaseSolution):
     """VRP Solution Class."""
 
-    def __init__(self, routes: list[Route]) -> None:
+    def __init__(self, routes: list[Route] = []) -> None:
         """Class Constructor.
 
         Args:
@@ -261,6 +261,14 @@ class Solution(BaseSolution):
             f"{self.__class__.__name__}( routes=[{len(self.routes)} "
             + "Route(s)] )"
         )
+
+    def __len__(self) -> int:
+        """_summary_.
+
+        Returns:
+            int: _description_
+        """
+        return len(self.routes)
 
 
 class VRP(BaseProblem):
@@ -303,3 +311,17 @@ class VRPHeuristic(BaseHeuristic):
     def __init__(self) -> None:
         """Class Constructor."""
         super().__init__()
+
+    def apply(self, solution: Solution) -> Solution:
+        """_summary_.
+
+        Args:
+            solution (Solution): _description_
+
+        Raises:
+            NotImplementedError: _description_
+
+        Returns:
+            Solution: _description_
+        """
+        raise NotImplementedError
