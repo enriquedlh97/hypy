@@ -28,9 +28,6 @@ def read_solomon_instance(
         instance_name: str = instance_data[0].strip()
         num_vehicles: int = int(instance_data[4].split()[0])
         vehicle_capacity: int = int(instance_data[4].split()[1])
-        vehicles: list[Vehicle] = [
-            Vehicle(capacity=vehicle_capacity) for _ in range(num_vehicles)
-        ]
         depot: VRPTWDepot = VRPTWDepot(
             id_number=int(instance_data[9].split()[0]),
             time_window=TimeWindow(
@@ -44,6 +41,10 @@ def read_solomon_instance(
                 )
             ),
         )
+        vehicles: list[Vehicle] = [
+            Vehicle(capacity=vehicle_capacity, location=depot.location)
+            for _ in range(num_vehicles)
+        ]
         customers: list[VRPTWCustomer] = []
 
         for customer in instance_data[10:]:
