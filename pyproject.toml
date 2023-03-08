@@ -6,10 +6,12 @@ authors = ["enriquedlh97 <enriquedlh97@hotmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.10,<3.12"
 numpy = "^1.23.4"
 tqdm = "^4.64.1"
 toml = "^0.10.2"
+numba = "^0.56.4"
+scipy = "^1.10.1"
 
 
 [tool.poetry.group.dev.dependencies]
