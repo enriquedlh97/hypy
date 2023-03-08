@@ -1,6 +1,6 @@
 """VRP Base Components Module.
 
-This module allows the suer to make basic operations with the base
+This module allows the user to make basic operations with the base
 elements form a VRP problem.
 
 Examples:
@@ -14,18 +14,26 @@ Examples:
 
 
 from __future__ import annotations
+from typing import List
 
 import numpy as np
 import numpy.typing as npt
+import numba
+from numba.experimental import jitclass
+# from typing import List
+# from hypy.jit_compilation_config import jit_compile
 
-from hypy.base import BaseHeuristic, BaseProblem, BaseSolution
-from hypy.problems.vrp.exceptions import LocationCoordinatesError
+from hypy.base import Heuristic, Problem, Solution
+# from hypy.problems.vrp.exceptions import LocationCoordinatesError
 
 
+@jitclass
 class Location:
-    """VRP Element Location Class."""
+    """VRP Element 2-Dimensional Location Class."""
+    coordinates: numba.float64[:]
 
-    def __init__(self, coordinates: npt.NDArray[np.float_]) -> None:
+    def __init__(self, coordinates: np.float64 | numba.float64[:]) -> None:
+    # def __init__(self, coordinates) -> None:
         """Class Constructor.
 
         Args:
@@ -36,18 +44,10 @@ class Location:
             LocationCoordinatesError: _description_
             LocationCoordinatesError: _description_
         """
-        if not isinstance(coordinates, np.ndarray):
-            raise LocationCoordinatesError(coordinates_type=type(coordinates))
-
-        if len(coordinates.shape) > 1:
-            raise LocationCoordinatesError(shape=coordinates.shape[1])  # type: ignore  # noqa: E501
-
-        if coordinates.size == 0:
-            raise LocationCoordinatesError(size=coordinates.size)
 
         self.coordinates = coordinates
 
-    def __sub__(self, location: Location) -> np.float_ | np.int_:
+    def __sub__(self, location: Location) -> Location:
         """Subtraction Method.
 
         Examples:
@@ -63,9 +63,9 @@ class Location:
         Returns:
             _description_
         """
-        return self.coordinates - location.coordinates  # type: ignore
+        return Location(self.coordinates - location.coordinates)
 
-    def __add__(self, location: Location) -> np.float_ | np.int_:
+    def __add__(self, location: Location) -> Location:
         """Addition Method.
 
         Args:
@@ -74,21 +74,14 @@ class Location:
         Returns:
             _description_
         """
-        return self.coordinates + location.coordinates  # type: ignore
-
-    def __repr__(self) -> str:
-        """_summary_.
-
-        Returns:
-            str: _description_
-        """
-        return f"{self.__class__.__name__}( coordinates={self.coordinates} )"
+        return Location(self.coordinates + location.coordinates)
 
 
-class BaseElement:
+class VRPElement:
     """VRP Base Element Class."""
+    location: Location
 
-    def __init__(self, location: Location | None = None) -> None:
+    def __init__(self, location: Location) -> None:
         """Class Constructor.
 
         Args:
@@ -97,24 +90,9 @@ class BaseElement:
         Raises:
             TypeError: _description_
         """
-        if location is not None:
-            if isinstance(location, Location):
-                self.location = location
-            else:
-                raise TypeError(
-                    f"Location must be of type {Location}, "
-                    + f"not {type(location)}"
-                )
+        self.location = location
 
-    def __repr__(self) -> str:
-        """_summary_.
-
-        Returns:
-            str: _description_
-        """
-        return f"{self.__class__.__name__}( location={self.location} )"
-
-    def compute_distance(self, element: BaseElement) -> np.float_ | None:
+    def compute_distance(self, element: VRPElement) -> np.float64:
         """Computes distance between current object an another VRP element.
 
         Args:
@@ -123,13 +101,12 @@ class BaseElement:
         Returns:
             _description_
         """
-        # TODO: Check Location types are the same, same dimensions, etc.
-        if self.location is not None:
-            return self.distance_op(element.location)
-        else:
-            return None
+        if self.location.coordinates.size != element.location.coordinates.size:
+            raise ValueError("Both elements must have locations of the same dimensions")
 
-    def distance_op(self, location: Location) -> np.float_:
+        return self.distance_op(element.location)
+
+    def distance_op(self, location: Location) -> np.float64:
         """Defines the distance operation. Defaults to euclidean distance.
 
         Args:
@@ -138,14 +115,18 @@ class BaseElement:
         Returns:
             _description_
         """
-        return np.linalg.norm(self.location - location, ord=2)
+        return np.linalg.norm((self.location - location).coordinates, ord=2)
 
 
-class Customer(BaseElement):
+@jitclass
+class Customer(VRPElement):
     """VRP Customer Class."""
+    __init__VRPElement = VRPElement.__init__
+    demand: numba.float64
+    location: Location
 
     def __init__(
-        self, demand: float | int, location: Location | None = None
+        self, demand: np.float64 | numba.float64, location: Location
     ) -> None:
         """Class Constructor.
 
@@ -153,26 +134,19 @@ class Customer(BaseElement):
             location: _description_
             demand: _description_
         """
-        super().__init__(location)
+        self.__init__VRPElement(location)
         self.demand = demand
 
-    def __repr__(self) -> str:
-        """_summary_.
 
-        Returns:
-            str: _description_
-        """
-        return (
-            f"{self.__class__.__name__}( location={self.location}, "
-            + f"demand={self.demand} )"
-        )
-
-
-class Vehicle(BaseElement):
+@jitclass
+class Vehicle(VRPElement):
     """VRP Vehicle Class."""
+    __init__VRPElement = VRPElement.__init__
+    capacity: numba.float64
+    location: Location
 
     def __init__(
-        self, capacity: float | int, location: Location | None = None
+        self, capacity: np.float64 | numba.float64, location: Location
     ) -> None:
         """Class Constructor.
 
@@ -180,37 +154,34 @@ class Vehicle(BaseElement):
             location: _description_
             capacity: _description_
         """
-        super().__init__(location)
+        self.__init__VRPElement
         self.capacity = capacity
-
-    def __repr__(self) -> str:
-        """_summary_.
-
-        Returns:
-            str: _description_
-        """
-        return (
-            f"{self.__class__.__name__}( location={self.location}, "
-            + f"capacity={self.capacity} )"
-        )
+        self.location = location
 
 
-class Depot(BaseElement):
+@jitclass
+class Depot(VRPElement):
     """VRP Depot Class."""
+    __init__VRPElement = VRPElement.__init__
+    location: Location
 
-    def __init__(self, location: Location | None = None) -> None:
+    def __init__(self, location: Location) -> None:
         """Class Constructor.
 
         Args:
             location: _description_
         """
-        super().__init__(location)
+        self.__init__VRPElement
+        self.location = location
 
 
+@jitclass
 class Route:
     """VRP Route Class."""
+    vehicle: Vehicle
+    route: List[Customer]
 
-    def __init__(self, vehicle: Vehicle, route: list[Customer] = []) -> None:
+    def __init__(self, vehicle: Vehicle, route: list[Customer]) -> None:
         """Class Constructor.
 
         Args:
@@ -220,7 +191,7 @@ class Route:
         self.vehicle = vehicle
         self.route = route
 
-    def __len__(self):
+    def __len__(self) -> int:
         """Length ob object method.
 
         Returns:
@@ -228,39 +199,20 @@ class Route:
         """
         return len(self.route)
 
-    def __repr__(self) -> str:
-        """_summary_.
 
-        Returns:
-            str: _description_
-        """
-        return (
-            f"{self.__class__.__name__}( vehicle={self.vehicle}, "
-            + f"route=[{len(self.route)} Customer(s)] )"
-        )
-
-
-class Solution(BaseSolution):
+class VRPSolution(Solution):
     """VRP Solution Class."""
+    __init__Solution = VRPElement.__init__
+    routes: List[Route]
 
-    def __init__(self, routes: list[Route] = []) -> None:
+    def __init__(self, routes: list[Route]) -> None:
         """Class Constructor.
 
         Args:
             routes: _description_
         """
+        self.__init__Solution
         self.routes = routes
-
-    def __repr__(self) -> str:
-        """_summary_.
-
-        Returns:
-            str: _description_
-        """
-        return (
-            f"{self.__class__.__name__}( routes=[{len(self.routes)} "
-            + "Route(s)] )"
-        )
 
     def __len__(self) -> int:
         """_summary_.
@@ -271,14 +223,18 @@ class Solution(BaseSolution):
         return len(self.routes)
 
 
-class VRP(BaseProblem):
+class VRP(Problem):
     """VRP Problem Class."""
+    __init__Problem = Problem.__init__
+    depots: List[Depot]
+    customers: List[Customer]
+    vehicles: List[Vehicle]
 
     def __init__(
         self,
-        depot: list[Depot] = [],
-        customers: list[Customer] = [],
-        vehicles: list[Vehicle] = [],
+        depots: List[Depot],
+        customers: List[Customer],
+        vehicles: List[Vehicle],
     ) -> None:
         """Class Constructor.
 
@@ -287,41 +243,30 @@ class VRP(BaseProblem):
             customers: _description_
             vehicles: _description_
         """
-        super().__init__()
-        self.depot = depot
+        self.__init__Problem
+        self.depots = depots
         self.customers = customers
         self.vehicles = vehicles
 
-    def __repr__(self) -> str:
-        """_summary_.
 
-        Returns:
-            str: _description_
-        """
-        return (
-            f"{self.__class__.__name__}( depot=[{len(self.depot)} Depot(s)], "
-            + f"customers=[{len(self.customers)} Customer(s)], "
-            + f"vehicles=[{len(self.vehicles)} Vehicle(s)]"
-        )
+# class VRPHeuristic(Heuristic):
+#     """VRP Heuristic Class."""
 
+#     def __init__(self) -> None:
+#         """Class Constructor."""
+#         super().__init__()
 
-class VRPHeuristic(BaseHeuristic):
-    """VRP Heuristic Class."""
+#     def apply(self, solution: Solution) -> Solution:
+#         """_summary_.
 
-    def __init__(self) -> None:
-        """Class Constructor."""
-        super().__init__()
+#         Args:
+#             solution (Solution): _description_
 
-    def apply(self, solution: Solution) -> Solution:
-        """_summary_.
+#         Raises:
+#             NotImplementedError: _description_
 
-        Args:
-            solution (Solution): _description_
+#         Returns:
+#             Solution: _description_
+#         """
+#         raise NotImplementedError
 
-        Raises:
-            NotImplementedError: _description_
-
-        Returns:
-            Solution: _description_
-        """
-        raise NotImplementedError
