@@ -1,5 +1,4 @@
 """Base Module."""
-from hypy.jit_compilation_config import jit_compile
 
 
 class Solution:
@@ -10,7 +9,6 @@ class Solution:
         pass
 
 
-# @jit_compile
 class Problem:
     """Base Problem Class."""
 

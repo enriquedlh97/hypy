@@ -14,26 +14,31 @@ Examples:
 
 
 from __future__ import annotations
+
+import os
+
+if os.environ.get("GLOBAL_NAME") is None:
+    os.environ["GLOBAL_NAME"] = "hypy.problems.vrp.components"
+
+
 from typing import List
 
-import numpy as np
-import numpy.typing as npt
 import numba
-from numba.experimental import jitclass
-# from typing import List
-# from hypy.jit_compilation_config import jit_compile
+import numpy as np
 
 from hypy.base import Heuristic, Problem, Solution
-# from hypy.problems.vrp.exceptions import LocationCoordinatesError
+from hypy.jitclass_compilation import jit_compile
+
+MODULE_NAME = "hypy.problems.vrp.components"
 
 
-@jitclass
+@jit_compile(os.environ["GLOBAL_NAME"], MODULE_NAME)
 class Location:
     """VRP Element 2-Dimensional Location Class."""
+
     coordinates: numba.float64[:]
 
     def __init__(self, coordinates: np.float64 | numba.float64[:]) -> None:
-    # def __init__(self, coordinates) -> None:
         """Class Constructor.
 
         Args:
@@ -77,8 +82,12 @@ class Location:
         return Location(self.coordinates + location.coordinates)
 
 
+# Here the '@jit_compile' decorator is omitted because more classes are
+# subclassed from this one in the current file. This is because
+# 'jitclass' does not support subclassing.
 class VRPElement:
     """VRP Base Element Class."""
+
     location: Location
 
     def __init__(self, location: Location) -> None:
@@ -102,7 +111,9 @@ class VRPElement:
             _description_
         """
         if self.location.coordinates.size != element.location.coordinates.size:
-            raise ValueError("Both elements must have locations of the same dimensions")
+            raise ValueError(
+                "Both elements must have locations of the same dimensions"
+            )
 
         return self.distance_op(element.location)
 
@@ -118,9 +129,10 @@ class VRPElement:
         return np.linalg.norm((self.location - location).coordinates, ord=2)
 
 
-@jitclass
+@jit_compile(os.environ["GLOBAL_NAME"], MODULE_NAME)
 class Customer(VRPElement):
     """VRP Customer Class."""
+
     __init__VRPElement = VRPElement.__init__
     demand: numba.float64
     location: Location
@@ -138,9 +150,10 @@ class Customer(VRPElement):
         self.demand = demand
 
 
-@jitclass
+@jit_compile(os.environ["GLOBAL_NAME"], MODULE_NAME)
 class Vehicle(VRPElement):
     """VRP Vehicle Class."""
+
     __init__VRPElement = VRPElement.__init__
     capacity: numba.float64
     location: Location
@@ -159,9 +172,10 @@ class Vehicle(VRPElement):
         self.location = location
 
 
-@jitclass
+@jit_compile(os.environ["GLOBAL_NAME"], MODULE_NAME)
 class Depot(VRPElement):
     """VRP Depot Class."""
+
     __init__VRPElement = VRPElement.__init__
     location: Location
 
@@ -175,9 +189,10 @@ class Depot(VRPElement):
         self.location = location
 
 
-@jitclass
+@jit_compile(os.environ["GLOBAL_NAME"], MODULE_NAME)
 class Route:
     """VRP Route Class."""
+
     vehicle: Vehicle
     route: List[Customer]
 
@@ -200,8 +215,10 @@ class Route:
         return len(self.route)
 
 
+@jit_compile(os.environ["GLOBAL_NAME"], MODULE_NAME)
 class VRPSolution(Solution):
     """VRP Solution Class."""
+
     __init__Solution = VRPElement.__init__
     routes: List[Route]
 
@@ -223,8 +240,10 @@ class VRPSolution(Solution):
         return len(self.routes)
 
 
+@jit_compile(os.environ["GLOBAL_NAME"], MODULE_NAME)
 class VRP(Problem):
     """VRP Problem Class."""
+
     __init__Problem = Problem.__init__
     depots: List[Depot]
     customers: List[Customer]
@@ -249,24 +268,24 @@ class VRP(Problem):
         self.vehicles = vehicles
 
 
-# class VRPHeuristic(Heuristic):
-#     """VRP Heuristic Class."""
+@jit_compile(os.environ["GLOBAL_NAME"], MODULE_NAME)
+class VRPHeuristic(Heuristic):
+    """VRP Heuristic Class."""
 
-#     def __init__(self) -> None:
-#         """Class Constructor."""
-#         super().__init__()
+    def __init__(self) -> None:
+        """Class Constructor."""
+        super().__init__()
 
-#     def apply(self, solution: Solution) -> Solution:
-#         """_summary_.
+    def apply(self, solution: Solution) -> Solution:
+        """_summary_.
 
-#         Args:
-#             solution (Solution): _description_
+        Args:
+            solution (Solution): _description_
 
-#         Raises:
-#             NotImplementedError: _description_
+        Raises:
+            NotImplementedError: _description_
 
-#         Returns:
-#             Solution: _description_
-#         """
-#         raise NotImplementedError
-
+        Returns:
+            Solution: _description_
+        """
+        raise NotImplementedError
