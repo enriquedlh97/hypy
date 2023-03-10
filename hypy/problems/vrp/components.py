@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import os
 
+# This has to stay here for proper jitclass compilation
 if os.environ.get("GLOBAL_NAME") is None:
     os.environ["GLOBAL_NAME"] = "hypy.problems.vrp.components"
 
@@ -49,7 +50,6 @@ class Location:
             LocationCoordinatesError: _description_
             LocationCoordinatesError: _description_
         """
-
         self.coordinates = coordinates
 
     def __sub__(self, location: Location) -> Location:
@@ -255,12 +255,12 @@ class VRP(Problem):
         customers: List[Customer],
         vehicles: List[Vehicle],
     ) -> None:
-        """Class Constructor.
+        """_summary_.
 
         Args:
-            depot: _description_
-            customers: _description_
-            vehicles: _description_
+            depots (List[Depot]): _description_
+            customers (List[Customer]): _description_
+            vehicles (List[Vehicle]): _description_
         """
         self.__init__Problem
         self.depots = depots
