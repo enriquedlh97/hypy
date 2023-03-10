@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import os
 
+# This has to stay here for proper jitclass compilation
 if os.environ.get("GLOBAL_NAME") is None:
     os.environ["GLOBAL_NAME"] = "hypy.problems.vrp.vrptw.components"
 
@@ -14,21 +15,84 @@ from numba.experimental import jitclass
 from numba.experimental.jitclass.base import JitClassType
 
 from hypy.jitclass_compilation import jit_compile
-from hypy.problems.vrp.components import (  # VRP,; Depot,; Route,; Solution,; Vehicle,
+from hypy.problems.vrp.components import (  # VRP,;Route,;Solution,;Vehicle,
     Customer,
+    Depot,
     Location,
 )
 
+# TODO: Add explanation
 MODULE_NAME = "hypy.problems.vrp.vrptw.components"
 
-# Make sure to be using the correct version of the objects (jitted or not jitted)
+# Make sure to be using the correct version of the objects 
+# (jitted or not jitted)
 if not isinstance(Location, type(JitClassType)):
     Location = jitclass(LocationVRPTW)
 
 if isinstance(Customer, type(JitClassType)):
     Customer = Customer.__base__
 
-# @jit_compile
+# # @jit_compile
+# class VRPTWCustomer(Customer):
+#     """_summary_.
+
+#     Args:
+#         Customer: _description_
+#     """
+
+#     __init__Customer = Customer.__init__
+#     id_number: numba.int64
+#     demand: numba.float64
+#     time_window: TimeWindow
+#     location: Location
+
+#     def __init__(
+#         self,
+#         id_number: np.int64 | numba.int64,
+#         demand: np.float64 | numba.float64,
+#         time_window: TimeWindow,
+#         location: Location,
+#     ) -> None:
+#         """_summary_.
+
+#         Args:
+#             id_number: _description_
+#             demand: _description_
+#             time_window: _description_
+#             location: _description_. Defaults to None.
+#         """
+#         self.__init__Customer(demand, location)
+#         self.id_number = id_number
+#         self.time_window = time_window
+
+
+@jit_compile(os.environ["GLOBAL_NAME"], MODULE_NAME)
+class TimeWindow:
+    """_summary_."""
+
+    ready_time: numba.int64
+    due_date: numba.int64
+    service_duration: numba.int64
+
+    def __init__(
+        self,
+        ready_time: np.int64 | numba.int64,
+        due_date: np.int64 | numba.int64,
+        service_duration: np.int64 | numba.int64,
+    ) -> None:
+        """_summary_.
+
+        Args:
+            ready_time (int): _description_
+            due_date (int): _description_
+            service_duration (int): _description_
+        """
+        self.ready_time = ready_time
+        self.due_date = due_date
+        self.service_duration = service_duration
+
+
+@jit_compile(os.environ["GLOBAL_NAME"], MODULE_NAME)
 class VRPTWCustomer(Customer):
     """_summary_.
 
@@ -39,14 +103,14 @@ class VRPTWCustomer(Customer):
     __init__Customer = Customer.__init__
     id_number: numba.int64
     demand: numba.float64
-    # time_window: Tuple[numba.float64],
+    time_window: TimeWindow
     location: Location
 
     def __init__(
         self,
         id_number: np.int64 | numba.int64,
         demand: np.float64 | numba.float64,
-        # time_window: TimeWindow,
+        time_window: TimeWindow,
         location: Location,
     ) -> None:
         """_summary_.
@@ -59,113 +123,38 @@ class VRPTWCustomer(Customer):
         """
         self.__init__Customer(demand, location)
         self.id_number = id_number
-        # self.time_window = time_window
+        self.time_window = time_window
 
 
-# class TimeWindow:
-#     """_summary_."""
+@jit_compile(os.environ["GLOBAL_NAME"], MODULE_NAME)
+class VRPTWDepot(Depot):
+    """_summary_.
 
-#     def __init__(
-#         self, ready_time: int, due_date: int, service_duration: int
-#     ) -> None:
-#         """_summary_.
+    Args:
+        Depot (_type_): _description_
+    """
 
-#         Args:
-#             ready_time (int): _description_
-#             due_date (int): _description_
-#             service_duration (int): _description_
-#         """
-#         self.ready_time = ready_time
-#         self.due_date = due_date
-#         self.service_duration = service_duration
+    __init__Depot = Depot.__init__
+    id_number: numba.int64
+    time_window: TimeWindow
+    location: Location
 
-#     def __repr__(self) -> str:
-#         """_summary_.
+    def __init__(
+        self,
+        id_number: np.int64 | numba.int64,
+        time_window: TimeWindow,
+        location: Location,
+    ) -> None:
+        """_summary_.
 
-#         Returns:
-#             str: _description_
-#         """
-#         return (
-#             f"{self.__class__.__name__}( "
-#             + f"window=[{self.ready_time}, {self.due_date}], "
-#             + f"service_duration={self.service_duration} )"
-#         )
-
-
-# class VRPTWCustomer(Customer):
-#     """_summary_.
-
-#     Args:
-#         Customer: _description_
-#     """
-
-#     def __init__(
-#         self,
-#         id_number: int,
-#         demand: float | int,
-#         time_window: TimeWindow,
-#         location: Location | None = None,
-#     ) -> None:
-#         """_summary_.
-
-#         Args:
-#             id_number: _description_
-#             demand: _description_
-#             time_window: _description_
-#             location: _description_. Defaults to None.
-#         """
-#         super().__init__(demand, location)
-#         self.id_number = id_number
-#         self.time_window = time_window
-
-#     def __repr__(self) -> str:
-#         """_summary_.
-
-#         Returns:
-#             str: _description_
-#         """
-#         return (
-#             f"{self.__class__.__name__}( "
-#             + f"id={self.id_number}, demand={self.demand}, "
-#             + f"location={self.location}, time_window={self.time_window} )"
-#         )
-
-
-# class VRPTWDepot(Depot):
-#     """_summary_.
-
-#     Args:
-#         Depot (_type_): _description_
-#     """
-
-#     def __init__(
-#         self,
-#         id_number: int,
-#         time_window: TimeWindow,
-#         location: Location | None = None,
-#     ) -> None:
-#         """_summary_.
-
-#         Args:
-#             id_number: _description_
-#             time_window: _description_
-#             location: _description_. Defaults to None.
-#         """
-#         super().__init__(location)
-#         self.id_number = id_number
-#         self.time_window = time_window
-
-#     def __repr__(self) -> str:
-#         """_summary_.
-
-#         Returns:
-#             str: _description_
-#         """
-#         return (
-#             f"{self.__class__.__name__}( "
-#             + f"id={self.id_number}, location={self.location}, "
-#             + f"time_window={self.time_window} )"
-#         )
+        Args:
+            id_number: _description_
+            time_window: _description_
+            location: _description_. Defaults to None.
+        """
+        self.__init__Depot(location)
+        self.id_number = id_number
+        self.time_window = time_window
 
 
 # class VRPTWRoute(Route):
